@@ -1,0 +1,58 @@
+---
+---
+
+<section class="bg-white dark:bg-gray-800 py-12 rounded-lg shadow-md">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center">
+      <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">Stay Updated</h2>
+      <p class="text-gray-600 dark:text-gray-400 mb-6 max-w-2xl mx-auto">
+        Subscribe to our newsletter to get the latest resources and updates delivered directly to your inbox.
+      </p>
+      
+      <form id="newsletter-form" class="max-w-md mx-auto">
+        <div class="flex flex-col sm:flex-row gap-2">
+          <input 
+            type="email" 
+            id="email" 
+            name="email" 
+            placeholder="Enter your email" 
+            required 
+            class="flex-grow px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+          />
+          <button 
+            type="submit" 
+            class="px-6 py-2 bg-indigo-600 text-white font-medium rounded-md hover:bg-indigo-700 transition-colors"
+          >
+            Subscribe
+          </button>
+        </div>
+        <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">
+          We respect your privacy. Unsubscribe at any time.
+        </p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<script>
+  document.getElementById('newsletter-form')?.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    
+    const form = event.target;
+    const email = form.email.value;
+    
+    try {
+      // Here you would typically send this to your API
+      // For now, we'll just simulate a successful subscription
+      console.log('Subscribing email:', email);
+      
+      // Clear the form and show success message
+      form.reset();
+      alert('Thanks for subscribing to our newsletter!');
+    } catch (error) {
+      console.error('Error subscribing to newsletter:', error);
+      alert('There was an error subscribing to the newsletter. Please try again.');
+    }
+  });
+</script>
+

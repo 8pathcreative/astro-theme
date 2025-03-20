@@ -1,0 +1,68 @@
+---
+import StarRating from './StarRating.astro';
+import { supabase } from '../lib/supabase';
+
+export interface ResourceRatingsProps {
+  resourceId: string;
+}
+
+const { resourceId } = Astro.props;
+
+// Fetch ratings for this resource
+const { data: ratings, error } = await supabase
+  .from('ratings')
+  .select('*')
+  .eq('resource_id', resourceId)
+  .order('created_at', { ascending: false });
+
+if (error) {
+  console.error('Error fetching ratings:', error);
+}
+
+const totalRatings = ratings?.length || 0;
+const averageRating = totalRatings > 0 
+  ? ratings.reduce((sum, rating) => sum + rating.rating, 0) / totalRatings 
+  : 0;
+---
+
+<div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mt-8">
+  <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">User Ratings & Reviews</h3>
+  
+  <div class="flex items-center mb-6">
+    <div class="mr-4">
+      <span class="text-3xl font-bold text-gray-900 dark:text-white">{averageRating.toFixed(1)}</span>
+      <span class="text-sm text-gray-500 dark:text-gray-400">/ 5</span>
+    </div>
+    <div>
+      <StarRating rating={averageRating} size="lg" />
+      <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+        Based on {totalRatings} {totalRatings === 1 ? 'rating' : 'ratings'}
+      </p>
+    </div>
+  </div>
+  
+  {totalRatings === 0 ? (
+    <p class="text-gray-600 dark:text-gray-400 text-center py-4">
+      No ratings yet. Be the first to rate this resource!
+    </p>
+  ) : (
+    <div class="space-y-6">
+      {ratings.map(rating => (
+        <div class="border-t border-gray-200 dark:border-gray-700 pt-4">
+          <div class="flex items-center mb-2">
+            <StarRating rating={rating.rating} size="sm" />
+            <span class="ml-2 text-sm text-gray-500 dark:text-gray-400">
+              {new Date(rating.created_at).toLocaleDateString()}
+            </span>
+          </div>
+          {rating.comment && (
+            <p class="text-gray-600 dark:text-gray-400 text-sm">
+              {rating.comment}
+            </p>
+          )}
+        </div>
+      ))}
+    </div>
+  )}
+</div>
+

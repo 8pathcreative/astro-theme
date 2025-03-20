@@ -1,0 +1,22 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+import CategoryCard from '../../components/CategoryCard.astro';
+import { getAllCategories } from '../../lib/resources';
+
+const categories = await getAllCategories();
+---
+
+<MainLayout title="Categories">
+  <div class="bg-gray-50 dark:bg-gray-900 py-12">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+      <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-8">Categories</h1>
+      
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        {categories.map(category => (
+          <CategoryCard category={category} />
+        ))}
+      </div>
+    </div>
+  </div>
+</MainLayout>
+

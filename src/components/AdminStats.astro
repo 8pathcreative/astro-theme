@@ -1,0 +1,47 @@
+---
+import { supabase } from '../lib/supabase';
+
+// Fetch statistics
+const { data: resourcesCount } = await supabase
+  .from('resources')
+  .select('id', { count: 'exact', head: true });
+
+const { data: pendingCount } = await supabase
+  .from('pending_resources')
+  .select('id', { count: 'exact', head: true })
+  .eq('status', 'pending');
+
+const { data: categoriesCount } = await supabase
+  .from('categories')
+  .select('id', { count: 'exact', head: true });
+
+const stats = [
+  {
+    title: 'Total Resources',
+    value: resourcesCount || 0,
+    color: 'indigo',
+  },
+  {
+    title: 'Pending Approval',
+    value: pendingCount || 0,
+    color: 'yellow',
+  },
+  {
+    title: 'Categories',
+    value: categoriesCount || 0,
+    color: 'green',
+  },
+];
+---
+
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+  {stats.map(stat => (
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+      <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">{stat.title}</h3>
+      <p class={`text-3xl font-bold text-${stat.color}-600 dark:text-${stat.color}-400`}>
+        {stat.value}
+      </p>
+    </div>
+  ))}
+</div>
+

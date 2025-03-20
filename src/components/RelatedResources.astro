@@ -1,0 +1,33 @@
+---
+import ResourceCard from './ResourceCard.astro';
+import { getAllResources } from '../lib/resources';
+
+export interface RelatedResourcesProps {
+  currentResourceId: string;
+  categoryId: string;
+  limit?: number;
+}
+
+const { currentResourceId, categoryId, limit = 3 } = Astro.props;
+
+// Get related resources from the same category
+const allResources = await getAllResources();
+const relatedResources = allResources
+  .filter(resource => 
+    resource.id !== currentResourceId && 
+    resource.categories?.id === categoryId
+  )
+  .slice(0, limit);
+---
+
+{relatedResources.length > 0 && (
+  <div class="mt-12">
+    <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">Related Resources</h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      {relatedResources.map(resource => (
+        <ResourceCard resource={resource} />
+      ))}
+    </div>
+  </div>
+)}
+

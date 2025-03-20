@@ -1,0 +1,159 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+import ResourceCard from '../../components/ResourceCard.astro';
+import SearchBar from '../../components/SearchBar.astro';
+import { getAllResources, getAllCategories } from '../../lib/resources';
+
+const resources = await getAllResources();
+const categories = await getAllCategories();
+
+// Get search query parameter
+const searchQuery = Astro.url.searchParams.get('search') || '';
+const categoryFilter = Astro.url.searchParams.get('category') || '';
+
+// Filter resources based on search and category
+let filteredResources = resources;
+if (searchQuery) {
+  filteredResources = resources.filter(resource => 
+    resource.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+    resource.description.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+}
+if (categoryFilter) {
+  filteredResources = filteredResources.filter(resource => 
+    resource.categories.slug === categoryFilter
+  );
+}
+
+const sortOption = Astro.url.searchParams.get('sort') || 'newest';
+
+// Sort resources based on sort option
+if (sortOption === 'rating') {
+  filteredResources = filteredResources.sort((a, b) => {
+    // Sort by average rating (highest first)
+    const ratingA = a.average_rating || 0;
+    const ratingB = b.average_rating || 0;
+    
+    if (ratingB !== ratingA) {
+      return ratingB - ratingA;
+    }
+    
+    // If ratings are equal, sort by number of ratings
+    const countA = a.ratings_count || 0;
+    const countB = b.ratings_count || 0;
+    
+    return countB - countA;
+  });
+}
+---
+
+<MainLayout title="Resources">
+  <div class="bg-gray-50 dark:bg-gray-900 py-12">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+      <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-8">Resources</h1>
+      
+      <div class="flex flex-col lg:flex-row gap-8">
+        <!-- Sidebar with filters -->
+        <div class="w-full lg:w-1/4">
+          <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 sticky top-24">
+            <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Search</h2>
+            <form>
+              <div class="mb-6">
+                <SearchBar value={searchQuery} placeholder="Search resources..." />
+              </div>
+              
+              <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Categories</h2>
+              <div class="space-y-2">
+                <div class="flex items-center">
+                  <input 
+                    type="radio" 
+                    id="all-categories" 
+                    name="category" 
+                    value="" 
+                    checked={categoryFilter === ''}
+                    class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 dark:border-gray-600"
+                  />
+                  <label for="all-categories" class="ml-2 text-gray-700 dark:text-gray-300">
+                    All Categories
+                  </label>
+                </div>
+                
+                {categories.map(category => (
+                  <div class="flex items-center">
+                    <input 
+                      type="radio" 
+                      id={`category-${category.id}`} 
+                      name="category" 
+                      value={category.slug} 
+                      checked={categoryFilter === category.slug}
+                      class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 dark:border-gray-600"
+                    />
+                    <label for={`category-${category.id}`} class="ml-2 text-gray-700 dark:text-gray-300">
+                      {category.name}
+                    </label>
+                  </div>
+                ))}
+              </div>
+              
+              <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 mt-6">Sort By</h2>
+              <div class="space-y-2">
+                <div class="flex items-center">
+                  <input 
+                    type="radio" 
+                    id="sort-newest" 
+                    name="sort" 
+                    value="newest" 
+                    checked={!Astro.url.searchParams.get('sort') || Astro.url.searchParams.get('sort') === 'newest'}
+                    class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 dark:border-gray-600"
+                  />
+                  <label for="sort-newest" class="ml-2 text-gray-700 dark:text-gray-300">
+                    Newest First
+                  </label>
+                </div>
+                
+                <div class="flex items-center">
+                  <input 
+                    type="radio" 
+                    id="sort-rating" 
+                    name="sort" 
+                    value="rating" 
+                    checked={Astro.url.searchParams.get('sort') === 'rating'}
+                    class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 dark:border-gray-600"
+                  />
+                  <label for="sort-rating" class="ml-2 text-gray-700 dark:text-gray-300">
+                    Highest Rated
+                  </label>
+                </div>
+              </div>
+
+              <div class="mt-6">
+                <button 
+                  type="submit" 
+                  class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded-md transition-colors"
+                >
+                  Apply Filters
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+        
+        <!-- Resource grid -->
+        <div class="w-full lg:w-3/4">
+          {filteredResources.length === 0 ? (
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 text-center">
+              <p class="text-gray-600 dark:text-gray-400">No resources found matching your criteria.</p>
+            </div>
+          ) : (
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {filteredResources.map((resource) => (
+                <ResourceCard resource={resource} variant="horizontal" />
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  </div>
+</MainLayout>
+
