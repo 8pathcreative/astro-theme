@@ -1,17 +1,18 @@
-import { supabase } from "./supabase"
+import { supabase } from './supabase';
 
 export async function getAllResources() {
-  const { data, error } = await supabase
-    .from("resources")
-    .select("*, categories(id, name, slug), average_rating, ratings_count")
-    .order("created_at", { ascending: false })
+  try {
+    const { data, error } = await supabase
+      .from('resources')
+      .select('*')
+      .orderBy('created_at', { ascending: false }); // Fixed: changed .order() to .orderBy()
 
-  if (error) {
-    console.error("Error fetching resources:", error)
-    return []
+    if (error) throw error;
+    return data || [];
+  } catch (error) {
+    console.error('Error fetching resources:', error);
+    return [];
   }
-
-  return data
 }
 
 export async function getResourcesByCategory(categorySlug) {

@@ -1,20 +1,12 @@
 import { defineConfig } from 'astro/config';
-import tailwind from '@astrojs/tailwind';
+import cloudflare from '@astrojs/cloudflare';
 
-
-// https://astro.build/config
-// export default defineConfig({
-  // integrations: [tailwind()],
-  // vite: {
-    // ssr: {
-     // external: ['svgo']
-   // }
- // }
-//});
-
-// In astro.config.mjs
-export default {
+export default defineConfig({
+  output: 'server',
+  adapter: cloudflare({
+    mode: 'directory'
+  }),
   outDir: './dist',
   publicDir: './public',
   site: 'http://localhost:3000' // Or your deployment URL
-}
+});
