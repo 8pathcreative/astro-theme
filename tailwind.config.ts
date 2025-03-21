@@ -3,10 +3,8 @@ import type { Config } from "tailwindcss";
 const config: Config = {
     darkMode: ["class"],
     content: [
-    "./pages/**/*.{js,ts,jsx,tsx,mdx}",
-    "./components/**/*.{js,ts,jsx,tsx,mdx}",
-    "./app/**/*.{js,ts,jsx,tsx,mdx}",
-    "*.{js,ts,jsx,tsx,mdx}"
+    "./src/**/*.{astro,html,js,jsx,ts,tsx}",
+    "./components/**/*.{astro,html,js,jsx,ts,tsx}",
   ],
   theme: {
   	extend: {
@@ -91,6 +89,8 @@ const config: Config = {
   		}
   	}
   },
-  plugins: [require("tailwindcss-animate")],
-};
+  plugins: [
+    // your plugins here
+  ],
+} satisfies Config;
 export default config;
