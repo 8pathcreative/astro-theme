@@ -6,7 +6,7 @@
 // export const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
 // Temporary placeholder to avoid import errors
-export const supabase = {
+const supabase = {
   // Add mock methods as needed
   from: () => ({
     select: () => ({ data: [], error: null }),
@@ -18,5 +18,6 @@ export const supabase = {
     signIn: () => Promise.resolve({ user: null, session: null, error: null }),
     signOut: () => Promise.resolve({ error: null }),
   }
-}
+};
 
+export { supabase as s };
