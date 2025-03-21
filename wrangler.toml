@@ -1,0 +1,6 @@
+name = "astro-theme"
+
+[build]
+  command = "npm run build"
+  output_directory = "dist"
+  environment = { NODE_VERSION = "18" }
