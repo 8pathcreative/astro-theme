@@ -20,7 +20,7 @@ export async function getResourcesByCategory(categorySlug) {
     .from("resources")
     .select("*, categories!inner(id, name, slug), average_rating, ratings_count")
     .eq("categories.slug", categorySlug)
-    .orderBy("created_at", { ascending: false })
+    .order("created_at", { ascending: false })
 
   if (error) {
     console.error("Error fetching resources by category:", error)
@@ -49,7 +49,7 @@ export async function getAllCategories() {
   const { data, error } = await supabase
     .from("categories")
     .select("*, resources(count)")
-    .orderBy("name", { ascending: true })
+    .order("name", { ascending: true })
 
   if (error) {
     console.error("Error fetching categories:", error)
@@ -64,7 +64,7 @@ export async function searchResources(query) {
     .from("resources")
     .select("*, categories(id, name, slug), average_rating, ratings_count")
     .or(`name.ilike.%${query}%,description.ilike.%${query}%`)
-    .orderBy("created_at", { ascending: false })
+    .order("created_at", { ascending: false })
 
   if (error) {
     console.error("Error searching resources:", error)
@@ -73,4 +73,7 @@ export async function searchResources(query) {
 
   return data
 }
+
+q
+q
 
