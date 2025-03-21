@@ -1,7 +1,7 @@
 import { e as createAstro, c as createComponent, m as maybeRenderHead, r as renderComponent, a as renderTemplate, d as addAttribute, b as renderScript } from '../../chunks/astro/server_DWG73qgy.mjs';
 import 'kleur/colors';
 import 'html-escaper';
-import { $ as $$MainLayout } from '../../chunks/MainLayout_CntMiy3R.mjs';
+import { $ as $$MainLayout } from '../../chunks/MainLayout_DfHo670R.mjs';
 import { $ as $$ResourceCard, a as $$StarRating } from '../../chunks/ResourceCard_BcXGyGkR.mjs';
 import { b as getAllResources } from '../../chunks/resources_BtsrPkd7.mjs';
 import 'clsx';

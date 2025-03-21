@@ -1,7 +1,7 @@
 import { c as createComponent, r as renderComponent, b as renderScript, a as renderTemplate, m as maybeRenderHead, d as addAttribute } from '../chunks/astro/server_DWG73qgy.mjs';
 import 'kleur/colors';
 import 'html-escaper';
-import { $ as $$MainLayout } from '../chunks/MainLayout_CntMiy3R.mjs';
+import { $ as $$MainLayout } from '../chunks/MainLayout_DfHo670R.mjs';
 import { a as getAllCategories } from '../chunks/resources_BtsrPkd7.mjs';
 export { renderers } from '../renderers.mjs';
 
